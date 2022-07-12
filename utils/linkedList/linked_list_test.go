@@ -4,18 +4,18 @@ import "testing"
 
 func TestLinkedList(t *testing.T) {
 	lst := LinkedList{}
-	lst.addValHead(1)
-	lst.show()
-	lst.addValHead(2)
-	lst.show()
-	lst.addAfter(lst.head, 3)
-	lst.show()
-	lst.addBefore(lst.head.next, 4)
-	lst.show()
-	lst.removeHead()
-	lst.show()
-	lst.removeNode(lst.head.next.next)
-	lst.show()
+	lst.AddValHead(1)
+	lst.Show()
+	lst.AddValHead(2)
+	lst.Show()
+	lst.AddAfter(lst.Head, 3)
+	lst.Show()
+	lst.AddBefore(lst.Head.Next, 4)
+	lst.Show()
+	lst.RemoveHead()
+	lst.Show()
+	lst.RemoveNode(lst.Head.Next.Next)
+	lst.Show()
 }
 
 func TestDualLinkedList(t *testing.T) {
@@ -24,7 +24,7 @@ func TestDualLinkedList(t *testing.T) {
 	dLst.show()
 	dLst.addHead(2)
 	dLst.show()
-	dLst.addBefore(dLst.head.next,3)
+	dLst.addBefore(dLst.head.next, 3)
 	dLst.show()
 	dLst.addAfter(dLst.head.next, 4)
 	dLst.show()

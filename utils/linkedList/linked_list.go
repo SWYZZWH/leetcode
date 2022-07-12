@@ -3,12 +3,12 @@ package linkedList
 import "fmt"
 
 type Node struct {
-	val  int
-	next *Node
+	Val  int
+	Next *Node
 }
 
 func (n Node) show() string {
-	return fmt.Sprintf("val: %v, next:%v", n.val, n.next)
+	return fmt.Sprintf("Val: %v, Next:%v", n.Val, n.Next)
 }
 
 type DualNode struct {
@@ -17,50 +17,50 @@ type DualNode struct {
 	prev *DualNode
 }
 
-func (n DualNode) show() string {
-	return fmt.Sprintf("val: %v, prev: %v, next:%v", n.val, n.prev, n.next)
+func (n DualNode) Show() string {
+	return fmt.Sprintf("Val: %v, prev: %v, Next:%v", n.val, n.prev, n.next)
 }
 
 type LinkedList struct {
-	head *Node
+	Head *Node
 }
 
-func (l *LinkedList) addNodeHead(n *Node) {
+func (l *LinkedList) AddNodeHead(n *Node) {
 	if n == nil {
 		return
 	}
 
-	n.next = l.head
-	l.head = n
+	n.Next = l.Head
+	l.Head = n
 }
 
-func (l *LinkedList) addValHead(val int) {
-	l.addNodeHead(&Node{
-		val:  val,
-		next: nil,
+func (l *LinkedList) AddValHead(val int) {
+	l.AddNodeHead(&Node{
+		Val:  val,
+		Next: nil,
 	})
 }
 
-func (l *LinkedList) findNodeByVal(val int) *Node {
-	for node := l.head; node != nil; node = node.next {
-		if node.val == val {
+func (l *LinkedList) FindNodeByVal(val int) *Node {
+	for node := l.Head; node != nil; node = node.Next {
+		if node.Val == val {
 			return node
 		}
 	}
 	return nil
 }
 
-func (l *LinkedList) findParent(n *Node) *Node {
-	if n == nil || l.head == nil {
+func (l *LinkedList) FindParent(n *Node) *Node {
+	if n == nil || l.Head == nil {
 		return nil
 	}
 
-	if n == l.head {
+	if n == l.Head {
 		return nil
 	}
 
-	for node := l.head; node != nil; node = node.next {
-		if node.next == n {
+	for node := l.Head; node != nil; node = node.Next {
+		if node.Next == n {
 			return node
 		}
 	}
@@ -68,66 +68,66 @@ func (l *LinkedList) findParent(n *Node) *Node {
 	return nil
 }
 
-func (l *LinkedList) addBefore(n *Node, val int) bool {
+func (l *LinkedList) AddBefore(n *Node, val int) bool {
 	if n == nil {
 		return false
 	}
 
 	newNode := &Node{
-		val:  val,
-		next: n,
+		Val:  val,
+		Next: n,
 	}
 
-	if n == l.head {
-		l.head = newNode
+	if n == l.Head {
+		l.Head = newNode
 		return true
 	}
 
-	if p := l.findParent(n); p != nil {
-		p.next = newNode
+	if p := l.FindParent(n); p != nil {
+		p.Next = newNode
 	}
 	return true
 }
 
-func (l *LinkedList) addAfter(n *Node, val int) bool {
+func (l *LinkedList) AddAfter(n *Node, val int) bool {
 	if n == nil {
 		return false
 	}
 	newNode := &Node{
-		val:  val,
-		next: n.next,
+		Val:  val,
+		Next: n.Next,
 	}
-	n.next = newNode
+	n.Next = newNode
 	return true
 }
 
-func (l *LinkedList) addAfterVal(val int) bool {
-	node := l.findNodeByVal(val)
+func (l *LinkedList) AddAfterVal(val int) bool {
+	node := l.FindNodeByVal(val)
 	if node == nil {
 		return false
 	}
-	return l.addAfter(node, val)
+	return l.AddAfter(node, val)
 }
 
-func (l *LinkedList) removeHead() {
-	if l.head == nil {
+func (l *LinkedList) RemoveHead() {
+	if l.Head == nil {
 		return
 	}
 
-	l.head = l.head.next
+	l.Head = l.Head.Next
 }
 
-func (l *LinkedList) removeNode(n *Node) {
+func (l *LinkedList) RemoveNode(n *Node) {
 	if n == nil {
 		return
 	}
 
-	if n == l.head {
-		l.removeHead()
+	if n == l.Head {
+		l.RemoveHead()
 	}
 
-	if p := l.findParent(n); p != nil {
-		p.next = n.next
+	if p := l.FindParent(n); p != nil {
+		p.Next = n.Next
 	}
 }
 
@@ -135,15 +135,15 @@ func (l *LinkedList) sort() {
 
 }
 
-func (l LinkedList) show() {
-	if l.head == nil {
-		fmt.Printf("head is : nil\n")
+func (l LinkedList) Show() {
+	if l.Head == nil {
+		fmt.Printf("Head is : nil\n")
 	} else {
-		fmt.Printf("head is : %s\n", l.head.show())
+		fmt.Printf("Head is : %s\n", l.Head.show())
 	}
 
-	if l.head != nil {
-		for n := l.head.next; n != nil; n = n.next {
+	if l.Head != nil {
+		for n := l.Head.Next; n != nil; n = n.Next {
 			fmt.Printf("\tnode is : %s\n", n.show())
 		}
 	}
@@ -295,19 +295,19 @@ func (l *DualLinkedList) removeNode(node *DualNode) bool {
 
 func (l *DualLinkedList) show() {
 	if l.head == nil {
-		fmt.Printf("head is : nil\n")
+		fmt.Printf("Head is : nil\n")
 	} else {
-		fmt.Printf("head is : %s\n", l.head.show())
+		fmt.Printf("Head is : %s\n", l.head.Show())
 	}
 	if l.tail == nil {
 		fmt.Printf("tail is : nil\n")
 	} else {
-		fmt.Printf("tail is : %s\n", l.tail.show())
+		fmt.Printf("tail is : %s\n", l.tail.Show())
 	}
 
 	if l.head != nil {
 		for n := l.head.next; n != nil; n = n.next {
-			fmt.Printf("\tnode is : %s\n", n.show())
+			fmt.Printf("\tnode is : %s\n", n.Show())
 		}
 	}
 }
