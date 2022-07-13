@@ -1,6 +1,8 @@
 package no_235
 
-import "awesomeProject/utils/TreeNode"
+import (
+	"awesomeProject/golang/utils/TreeNode"
+)
 
 // root is a BST, much simple, searchMap can be done in log(n)
 // recursive method may be better

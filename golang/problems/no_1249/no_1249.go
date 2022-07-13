@@ -1,7 +1,7 @@
 package no_1249
 
 import (
-	"awesomeProject/utils/stack"
+	"awesomeProject/golang/utils/stack"
 )
 
 //[146. LRU Cache](https://leetcode.com/problems/lru-cache)

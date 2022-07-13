@@ -1,7 +1,7 @@
 package no_2
 
 import (
-	"awesomeProject/utils/linkedList"
+	"awesomeProject/golang/utils/linkedList"
 	"testing"
 )
 

@@ -1,7 +1,7 @@
 package TreeNode
 
 import (
-	"awesomeProject/utils/algorithms"
+	"awesomeProject/golang/utils/algorithms"
 )
 
 type TreeNode struct {

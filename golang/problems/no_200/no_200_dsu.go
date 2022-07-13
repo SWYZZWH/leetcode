@@ -1,6 +1,8 @@
 package no_200
 
-import "awesomeProject/utils/DSU"
+import (
+	"awesomeProject/golang/utils/DSU"
+)
 
 func getIndex(i, j, n int) int {
 	return i*n + j

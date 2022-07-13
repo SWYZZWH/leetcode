@@ -1,7 +1,7 @@
 package no_314
 
 import (
-	TreeNode2 "awesomeProject/utils/TreeNode"
+	TreeNode2 "awesomeProject/golang/utils/TreeNode"
 	"github.com/stretchr/testify/require"
 	"testing"
 )

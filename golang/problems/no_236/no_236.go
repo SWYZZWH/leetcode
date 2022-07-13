@@ -1,6 +1,8 @@
 package no_236
 
-import "awesomeProject/utils/TreeNode"
+import (
+	"awesomeProject/golang/utils/TreeNode"
+)
 
 // 236. Lowest Common Ancestor of a Binary Tree
 // My solution is build an auxiliary tree of which node is always points to parent

@@ -1,6 +1,8 @@
 package no_314
 
-import "awesomeProject/utils/TreeNode"
+import (
+	"awesomeProject/golang/utils/TreeNode"
+)
 
 // Let each node has a 2D position (x, y)，x for level and y for column
 //
