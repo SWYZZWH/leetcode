@@ -31,6 +31,10 @@ t = set()
 
 ### Binary Search
 
+![img_1.png](img_1.png)
+
+#### border case
+
 when to use binary search:
 
 - the answer is an integer or double, don't have to trace the solution
@@ -70,6 +74,33 @@ virtual head and tail in list questions
 ### monotonous queue / stack
 
 when it is possible to use monotonous queue / stack, it is also possible to use left / right min/max array
+
+features:
+
+- number goes up and down, and the relative relationship of neighbors matters
+- when we visit i, the next sub problem only cares about the next and bigger index, or the next and smaller index, other indexes are useless
+- one kind of pre-process
+- information of original array is reduced
+- time complexity is O(n)
+
+Other:
+
+- we can use sentinel to avoid popping from empty stack
+
+template:
+
+```python
+class Solution:
+    def monostoneStack(self, T: List[int]) -> List[int]:
+        stack = []
+        ans = [0] * len(T)
+        for i in range(len(T)):
+            while stack and T[i] > T[stack[-1]]:
+                peek = stack.pop(-1)
+                ans[peek] = i - peek
+            stack.append(i)
+        return ans
+```
 
 ### 倍增
 
@@ -159,9 +190,10 @@ def build(nums, d, l, r, p):
         d[p] = nums[l]
         return
     m = (l + r) // 2
-    build(nums, d,l,  m, p * 2 + 1)
+    build(nums, d, l, m, p * 2 + 1)
     build(nums, d, m + 1, r, p * 2 + 2)
     d[p] = d[p * 2 + 1] + d[(p * 2) + 2]
+
 
 d = [0 for i in range(100)]
 nums = []
@@ -169,13 +201,15 @@ build(nums, d, 0, 100, 0)
 ```
 
 #### get range sum
+
 ```python
 # Python Version
 def getsum(l, r, s, t, p, d):
     # [l, r] 为查询区间, [s, t] 为当前节点包含的区间, p 为当前节点的编号
     if l <= s and t <= r:
-        return d[p] # 当前区间为询问区间的子集时直接返回当前区间的和
-    m = (l + r) // 2; sum = 0
+        return d[p]  # 当前区间为询问区间的子集时直接返回当前区间的和
+    m = (l + r) // 2;
+    sum = 0
     if l <= m:
         sum += getsum(l, r, s, m, p * 2 + 1, d)
     if r > m:
@@ -184,13 +218,14 @@ def getsum(l, r, s, t, p, d):
 ```
 
 ### range modify
+
 ```python
 
 ```
 
 ### 离散化
-must get the whole array
-than deduplicate, sort and binary search the index
+
+must get the whole array than deduplicate, sort and binary search the index
 
 ### how to solve range in leetcode
 
@@ -210,10 +245,8 @@ collections.defaultdict(int)  # reference non-existed key return 0, not raise ex
 ```
 
 ### sortedcontainers:
-sortedDict
-sortedList
-sortedSet
-can use bisect on keys:
+
+sortedDict sortedList sortedSet can use bisect on keys:
 
 ```python
 import sortedcontainers
@@ -223,3 +256,22 @@ idx = s.bisect(key)
 # idx to key:
 key = s.iloc[idx]
 ```
+
+### get combination
+
+````python
+combinations(range(len(letter)), 2)
+````
+
+### sliding window
+
+the size of range of each sub-problem is always fixed
+
+### zip, zip longest
+
+https://stackoverflow.com/questions/1277278/is-there-a-zip-like-function-that-pads-to-longest-length
+
+itertools.zip_longest(a, b, c)
+
+### all
+all for all element in a list meet the condition 

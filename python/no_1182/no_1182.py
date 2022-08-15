@@ -19,6 +19,8 @@ from typing import List
 class Solution:
     # visit twice, from left to right, and from right to left, for every color:
     # the dist[i][j] (j for color index) = min(left[i][j], right[i][j])
+
+    # also can be solved by binary search with higher complexity
     def shortestDistanceColor(self, colors: List[int], queries: List[List[int]]) -> List[int]:
         n = len(colors)
         left, right = [[math.inf, math.inf, math.inf]] * n, [[math.inf, math.inf, math.inf]] * n
