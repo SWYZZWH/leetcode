@@ -1,3 +1,57 @@
+## 570
+### hw1
+1/2: 
+First we proof: G-S algorithm always end up with the worst partners for women and best partners for men, then it's clear that the question 1 and question 2 are both correct
+
+Try to find contradiction:
+for matching S containing (m, w), if for woman w, there is another matching S' that contains (m', w), and m' < m in preference list of w,
+in S, exists (m', w'), now m' is with w, so in S', w > w', there will be (m'', w'),  and m'' > m' in preference list of w'
+and exists (m, w''), and w'' > w
+if m == m'', then 
+
+then m must not propose to w, else (m', w) will be replaced by (m, w), so m proposes to w' which ranks higher than m in preference list of m and gets married.
+then we consider the pair (m, w'), in matching S, there is a pair (m'', w'), as m ends up with w' in S, m'' >= m in preference list of w', 
+thus, for m'' in S', he certainly marries some woman ranks higher than w'
+  if m'' marries with the most preferred woman in S, than there is a contradiction.
+  else, we can continuously find m''' and so on, notice that m''' can't be m or m'
+
+
+
+
+
+### references
+
+https://www.zhihu.com/people/one-seventh/posts
+https://oi-wiki.org/
+https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/discuss/75924/Most-consistent-ways-of-dealing-with-the-series-of-stock-problems
+
+### dp problems
+
+tricks: append to the end of dp for border cases
+
+stock: 3D dp array: day, max transactions, stocks currently hold in hand
+
+0-1 pack: 2D dp: ith item, total weight
+
+notice:
+
+- for 0-1 backpack, outer loop: item, inner loop: weight
+
+```python
+def zero_one_knapsack():
+    dp = [0 for i in range(budget + 1)]  # tips1: target + 1
+    for i in range(0, len(present)):
+        for j in reversed(range(present[i], budget + 1)):  # tips2: from back to front, and ignore 0 - present[i]          
+            dp[j] = max(dp[j], dp[j - present[i]] + future[i] - present[i])
+
+    return dp[-1]  # tips3: don't have to maintain a maximum
+```
+
+- for complete backpack, we need to rearrange the order of loop, may be even flip the inner loop and the outer loop
+- top-down dp seems always get better performance in backpack problems
+
+sequence problem:
+
 #### top down dp
 
 ```python
@@ -9,6 +63,39 @@ class Solution:
             return self.dp[i]
         self.dp[i] = ...
 ```
+
+### gcd
+
+```python
+def gcd(a: int, b: int):
+    return a if b == 0 else gcd(b, a % b)
+```
+
+### extend gcd (裴蜀定理)
+
+equation: ax + by = c has the same solution with equation: a'x' + b'y' = c, a' = b and b' = a
+
+cause b * x' + (a - b * (a // b)) * y' = c a * y' + b(1 - (a // b)) x' = c
+
+so:
+y' = x x' = y / (1 - (a // b))
+
+at last, when b == 0 and return a == c, so at last x = 1, y = 0
+
+we run basic gcd, get the return x, y of last gcd, calculate new x', y' recursively
+
+### 波兰表达式
+
+前缀 中缀 后缀 互转
+
+mid -> suffix basic idea:
+
+- num : output directly
+- op: while op <= stk[-1], output stk[-1], then push op in stk
+- ^, = : while op < stk[-1], output stk[-1], then push op in stk
+- (: push directly in the stk
+- ): pop all ops before until (
+- EOF: pop all ops remaining in stk
 
 #### log n:
 
@@ -29,9 +116,49 @@ literal set(tuple) is immutable declare like following to get a mutable set:
 t = set()
 ```
 
+#### combination
+
+next_permutation
+
+Cnk
+
+#### heap
+
+1-indexed
+
+for node i, left child is 2 * i, right child is 2 * i + 1 for node i, parent is i // 2
+
+```python
+import math
+
+h = []
+
+
+def swim(n):
+    while n > 1 and h[n] < h[n // 2]:
+        h[n], h[n // 2] = h[n // 2], h[n]
+        n //= 2
+
+
+def sink(n):
+    if n >= len(h):
+        return
+    l = h[n * 2] if n * 2 <= len(h) else math.inf
+    # r = h[n * 2 + 1] if n * 2 + 1<= len(h) else math.inf
+    if h[n] <= l:
+        return
+    h[n], h[n * 2 + 1] = h[n * 2 + 1], h[n]
+    sink(n * 2 + 1)
+```
+
 ### Binary Search
 
 ![img_1.png](img_1.png)
+
+idx range: range(0: len(arr) + 1)
+bisect.bisect_left : find the left most element <= target
+bisect.bisect_right : find the first element on the right such as element > target
+
 
 #### border case
 
@@ -73,6 +200,12 @@ virtual head and tail in list questions
 
 ### monotonous queue / stack
 
+monotonous stack:
+Next/Last greatest/smallest element all elements smaller / greater than i, j
+
+monotonous queue:
+sliding window mainly solve problem about min/max of every subarray of fixed size “如果一个选手比你小还比你强，你就可以退役了。”——单调队列的原理
+
 when it is possible to use monotonous queue / stack, it is also possible to use left / right min/max array
 
 features:
@@ -104,6 +237,23 @@ class Solution:
 
 ### 倍增
 
+### 离散化
+
+only work for float in python in python we can do like this:
+
+```python
+import heapq
+
+floats = [1.0, 4.0, 3.5, 2.8]
+h = []
+for i, f in enumerate(floats):
+    heapq.heappush(h, (f, i))
+s = []
+while h:
+    p = heapq.heappop(h)
+    s.append(p[1])
+```
+
 ### ST table and RMQ
 
 RMQ: range min/max query different from sum query: max(a, a) = a, max(a, b) = max(a, a) (b belongs to a)
@@ -112,7 +262,13 @@ RMQ: range min/max query different from sum query: max(a, a) = a, max(a, b) = ma
 
 ![img.png](pics/img.png)
 
-#### low bit
+#### bit manipulation
+
+#### clear the least significant bit
+
+n &= (n - 1)
+
+#### keep the least significant bit
 
 low_bit = x & -x
 
@@ -252,9 +408,23 @@ sortedDict sortedList sortedSet can use bisect on keys:
 import sortedcontainers
 
 s = sortedcontainers.SortedDict()
-idx = s.bisect(key)
+
+# insert: default descending order
+s["a"] = 1
+s["b"] = 2
+
+# get: use index / get function
+
+# pop(key) : get and remove
+
+idx = s.bisect(key) # return idx to insert, may be n, default is bisect_right
+idx = s.bisect_left(key) # if key is already in s.keys(), return the current idx of key, we should use bisect_left in most cases
+
 # idx to key:
-key = s.iloc[idx]
+key = d.keys()[idx]
+
+# get item by idx
+d.peekitem(idx)
 ```
 
 ### get combination
@@ -274,4 +444,150 @@ https://stackoverflow.com/questions/1277278/is-there-a-zip-like-function-that-pa
 itertools.zip_longest(a, b, c)
 
 ### all
-all for all element in a list meet the condition 
+
+all for all element in a list meet the condition
+
+### counting sort
+
+when we meet constant size of input, like 0-9 a-z, we should consider use counting sort to optimize the time complexity
+
+### KMP
+
+most important point: shadow state
+
+```python
+    def strStr(self, haystack: str, needle: str) -> int:
+
+
+m, n = len(haystack), len(needle)
+nxt = [0 for i in range(n)]
+shadow, cur = 0, 1
+while cur < n:
+    if needle[shadow] == needle[cur]:
+        shadow += 1
+        nxt[cur] = shadow
+        cur += 1
+    elif shadow == 0:
+        cur += 1
+    else:
+        shadow = nxt[shadow - 1]
+
+i, j = 0, 0
+while i < m and j < n:
+    if haystack[i] == needle[j]:
+        i += 1
+        j += 1
+    elif j == 0:
+        i += 1
+    else:
+        j = nxt[j - 1]
+
+return i - m if j == n else -1 
+```
+
+```python
+class Solution:
+    # let's write down KMP
+    def strStr(self, haystack: str, needle: str) -> int:
+        M, N = len(haystack), len(needle)
+        if N == 0:
+            return 0
+
+        # pre-computation
+        next = [0 for i in range(N)]
+        shadow, cur = 0, 1
+        while cur < N:
+            if needle[shadow] != needle[cur] and shadow != 0:
+                shadow = next[shadow - 1]
+            else:
+                if needle[shadow] == needle[cur]:
+                    shadow += 1
+                next[cur] = shadow
+                cur += 1
+
+        i, j = 0, 0
+        while i < M and j < N:
+            if haystack[i] != needle[j] and j != 0:
+                j = next[j - 1]
+            else:
+                if haystack[i] == needle[j]:
+                    j += 1
+                i += 1
+
+        return i - N if j == N else -1
+
+```
+
+### Shortest Path
+
+### Dijkstra Algorithm
+
+### Cycle Detection
+
+### Topological sort
+
+the total number of node is given like N we can maintain an array incoming[N] and update
+
+```python
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+
+
+cnt = [0 for i in range(numCourses)]
+G = [set() for i in range(numCourses)]
+for p in prerequisites:
+    cnt[p[1]] += 1
+    G[p[0]].add(p[1])
+
+q = [i for i in range(numCourses) if cnt[i] == 0]
+for idx in q:
+    for j in G[idx]:
+        cnt[j] -= 1
+        if cnt[j] == 0:
+            q.append(j)
+
+return len(q) == numCourses
+```
+
+### MST(minimum spinning tree)
+
+```python
+    # Prim
+def minimumCostPrim(self, N: int, connections: List[List[int]]) -> int:
+    graph = collections.defaultdict(list)
+    for a, b, cost in connections:
+        graph[a].append((b, cost))
+        graph[b].append((a, cost))
+    visited = set()
+    cost = 0
+    minHeap = [(0, 1)]
+    while minHeap:
+        minCost, city = heapq.heappop(minHeap)
+        if city not in visited:
+            cost += minCost
+            visited.add(city)
+            for nxt, c in graph[city]:
+                if nxt not in visited:
+                    heapq.heappush(minHeap, (c, nxt))
+    return -1 if len(visited) < N else cost
+```
+
+### 0-1 BFS
+
+### quick squaring
+
+乘法且满足结合律
+
+```c++
+int qpow(int a, int n){
+    int ans = 1;
+    while(n){
+        if(n&1)        //如果n的当前末位为1
+            ans *= a;  //ans乘上当前的a
+        a *= a;        //a自乘
+        n >>= 1;       //n往右移一位
+    }
+    return ans;
+}
+```
+
+### k hop minimum path

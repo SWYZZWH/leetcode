@@ -31,3 +31,52 @@ class Solution:
                 self.rec(s, i, j)
         return self.ret
 
+
+# the idea of expanding from center is elegant
+
+
+# discuss by odd and even
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        left, right = 0, -1
+        for i in range(len(s)):
+            # odd
+            l, r = i, i
+            while l - 1 >= 0 and r + 1 < len(s) and s[l - 1] == s[r + 1]:
+                l -= 1
+                r += 1
+            if r - l > right - left:
+                left = l
+                right = r
+
+            # even
+            l, r = i, i - 1
+            while l - 1 >= 0 and r + 1 < len(s) and s[l - 1] == s[r + 1]:
+                l -= 1
+                r += 1
+            if r - l > right - left:
+                left = l
+                right = r
+
+        return s[left: right + 1]
+
+
+# avoid discussing odd and even
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        left, right = 0, -1
+        for i in range(len(s)):
+            r = i
+            while r + 1 < len(s) and s[r] == s[r + 1]:
+                r += 1
+
+            l = i
+            while l - 1 >= 0 and r + 1 < len(s) and s[l - 1] == s[r + 1]:
+                l -= 1
+                r += 1
+
+            if r - l > right - left:
+                left = l
+                right = r
+
+        return s[left: right + 1]

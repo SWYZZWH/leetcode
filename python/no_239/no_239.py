@@ -5,7 +5,6 @@ from typing import List
 
 from sortedcontainers import SortedDict
 
-
 # class Solution:
 # You are given an array of integers nums, there is a sliding window of size k which is moving from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position.
 #
@@ -44,6 +43,24 @@ from sortedcontainers import SortedDict
 #             d.setdefault(nums[i + k], 1)
 #         ret_lst.append(d.peekitem(-1)[0])
 #     return ret_lst
+
+from collections import deque
+
+
+class Solution:
+    # classic mono queue
+    def maxSlidingWindow(self, nums: 'List[int]', k: 'int') -> 'List[int]':
+        q = deque()
+        ret = []
+        for i, num in enumerate(nums):
+            while q and q[0][1] <= i - k:
+                q.popleft()
+            while q and q[-1][0] < num:
+                q.pop()
+            q.append((num, i))
+            if i >= k - 1:
+                ret.append(q[0][0])
+        return ret
 
 
 class Solution:
