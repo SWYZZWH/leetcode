@@ -1,24 +1,3 @@
-## 570
-### hw1
-1/2: 
-First we proof: G-S algorithm always end up with the worst partners for women and best partners for men, then it's clear that the question 1 and question 2 are both correct
-
-Try to find contradiction:
-for matching S containing (m, w), if for woman w, there is another matching S' that contains (m', w), and m' < m in preference list of w,
-in S, exists (m', w'), now m' is with w, so in S', w > w', there will be (m'', w'),  and m'' > m' in preference list of w'
-and exists (m, w''), and w'' > w
-if m == m'', then 
-
-then m must not propose to w, else (m', w) will be replaced by (m, w), so m proposes to w' which ranks higher than m in preference list of m and gets married.
-then we consider the pair (m, w'), in matching S, there is a pair (m'', w'), as m ends up with w' in S, m'' >= m in preference list of w', 
-thus, for m'' in S', he certainly marries some woman ranks higher than w'
-  if m'' marries with the most preferred woman in S, than there is a contradiction.
-  else, we can continuously find m''' and so on, notice that m''' can't be m or m'
-
-
-
-
-
 ### references
 
 https://www.zhihu.com/people/one-seventh/posts
@@ -116,6 +95,94 @@ literal set(tuple) is immutable declare like following to get a mutable set:
 t = set()
 ```
 
+#### structure design
+
+LRU: hashmap + double linked list
+
+LFU:
+
+#### Trie
+
+```python
+import collections
+
+
+class TrieNode:
+    def __init__(self):
+        self.isWord = False
+        self.child = collections.defaultdict(TrieNode)
+
+    def addWord(self, word):
+        cur = self
+        for c in word:
+            cur = cur.child[c]
+        cur.isWord = True
+
+    # usually doesn't need
+    def searchWord(self, word):
+        pass
+```
+
+
+#### Segement Tree
+```python
+# basic template
+# https://leetcode.com/articles/a-recursive-approach-to-segment-trees-range-sum-queries-lazy-propagation/
+# https://oi-wiki.org/ds/seg/
+class NumArray:
+
+    def __init__(self, nums: List[int]):
+        self.n = len(nums)
+        self.nums = nums
+        self.d = [0 for i in range(4 * self.n)]
+        self.build_tree(1, 0, self.n - 1)
+        
+    def build_tree(self, no: int, l: int, r: int):
+        if l == r:
+            self.d[no] = self.nums[l]
+            return self.d[no]
+        
+        mid = (l + r) // 2 
+        self.d[no] = self.build_tree(2 * no, l, mid) + self.build_tree(2 * no + 1, mid + 1, r)
+        return self.d[no]
+
+    def update(self, index: int, val: int) -> None:
+        # find all the way down 
+        delta = val - self.nums[index]
+        cur_no = 1
+        self.d[cur_no] += delta
+        l, r = 0, self.n - 1
+        while l < r:
+            mid = (l + r) // 2
+            if mid < index:
+                cur_no = cur_no * 2 + 1     
+                l = mid + 1
+            else:
+                cur_no = cur_no * 2
+                r = mid
+            self.d[cur_no] += delta
+        self.nums[index] = val
+
+    def sumRange(self, left: int, right: int) -> int:
+        cur_no = 1
+        l, r = 0, self.n - 1       
+        def rec(no: int, l: int, r: int, left: int, right: int):
+            if left <= l and r <= right:
+                return self.d[no]
+            
+            ret = 0
+            mid = (l + r) // 2
+            if left <= mid:
+                ret += rec(no * 2, l, mid, left, right)
+            if right > mid:
+                ret += rec(no * 2 + 1, mid + 1, r, left, right)
+            return ret
+            
+        return rec(cur_no, l, r, left, right)            
+
+```
+
+
 #### combination
 
 next_permutation
@@ -156,9 +223,7 @@ def sink(n):
 ![img_1.png](img_1.png)
 
 idx range: range(0: len(arr) + 1)
-bisect.bisect_left : find the left most element <= target
-bisect.bisect_right : find the first element on the right such as element > target
-
+bisect.bisect_left : find the left most element <= target bisect.bisect_right : find the first element on the right such as element > target
 
 #### border case
 
@@ -417,8 +482,8 @@ s["b"] = 2
 
 # pop(key) : get and remove
 
-idx = s.bisect(key) # return idx to insert, may be n, default is bisect_right
-idx = s.bisect_left(key) # if key is already in s.keys(), return the current idx of key, we should use bisect_left in most cases
+idx = s.bisect(key)  # return idx to insert, may be n, default is bisect_right
+idx = s.bisect_left(key)  # if key is already in s.keys(), return the current idx of key, we should use bisect_left in most cases
 
 # idx to key:
 key = d.keys()[idx]
@@ -591,3 +656,73 @@ int qpow(int a, int n){
 ```
 
 ### k hop minimum path
+
+### LRU
+
+double linked list + hash map double for find prev and delete easily it's better for implement a double linked list structure before implement LRU the interface of the double linked list should be:
+
+```python
+class DLinkedNode:
+
+    def __init__(self, val: int = 0, prev: "DLinkedNode" = None, nxt: "DLinkedNode" = None):
+        self.val = val
+        self.prev = prev
+        self.nxt = nxt
+
+    def __str__(self) -> str:
+        return "val {}".format(self.val)
+
+
+class DLinkedList:
+
+    def __init__(self):
+        self.head = DLinkedNode()
+        self.tail = self.head
+
+    def __len__(self) -> int:
+        return 0
+
+    def append(self, n: DLinkedNode):
+        if n is None:
+            return
+        self.tail.nxt = n
+        n.prev = self.tail
+        self.tail = n
+
+    def pop(self, n: DLinkedNode):
+        prev = n.prev
+        nxt = n.nxt
+        prev.nxt = nxt
+        if nxt:
+            nxt.prev = prev
+        else:
+            self.tail = prev
+
+    def popright(self):
+        self.pop(self.tail)
+
+    def popleft(self):
+        n = self.head.nxt
+        if not n:
+            return
+        self.pop(n)
+
+    def __str__(self):
+        cur = self.head.nxt
+        i = 0
+        ret = "List:\n"
+        while cur is not None:
+            ret += "\tnode {}: {}\n".format(i, cur)
+            i += 1
+            cur = cur.nxt
+
+        return ret
+```
+
+map{key: Node}
+
+### LFU
+
+maintain a global min_freq
+maintain a freq map:{freq: NodeList}
+maintain a key map:{key: Node}

@@ -11,6 +11,8 @@
 # 1 <= s.length <= 105
 # 2 <= k <= 104
 # s only contains lower case English letters.
+import heapq
+
 
 class Solution:
     # def removeDuplicates(self, s: str, k: int) -> str:
@@ -43,6 +45,7 @@ class Solution:
     def removeDuplicates(self, s: str, k: int) -> str:
         stk = []
         for i in range(len(s)):
+            heapq.heapify()
             if len(stk) == 0 or s[i] != stk[-1][0]:
                 stk.append([s[i], 1])
             else:
