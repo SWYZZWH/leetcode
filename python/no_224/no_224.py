@@ -33,5 +33,46 @@ def check_circle(n: int, edges: List[List[int]]) -> bool:
     return False
 
 
+class Solution:
+    # expr = factor +/- factor +/- factor
+    # factor = +- number / +-(expr)
+    # number = [0-9]+
+    def calculate(self, s: str) -> int:
+        s = s.replace(" ", "")
+        op = {
+            "+": lambda x, y: x + y,
+            "-": lambda x, y: x - y
+        }
+
+        def expr(s: str, i: int) -> (int, int):
+            res, i = factor(s, i)
+            while i != len(s) and s[i] in op:
+                op_func = op[s[i]]
+                f, i = factor(s, i + 1)
+                res = op_func(res, f)
+            return res, i
+
+        def factor(s: str, i: int) -> (int, int):
+            if i == len(s):
+                return 0, i
+            if s[i] == "(":
+                res, i = expr(s, i + 1)
+                return res, i + 1
+            if s[i] == "+":
+                return factor(s, i + 1)
+            if s[i] == "-":
+                res, i = factor(s, i + 1)
+                return -res, i
+            res = 0
+            while i < len(s) and s[i].isdigit():
+                res *= 10
+                res += int(s[i])
+                i += 1
+            return res, i
+
+        res, i = expr(s, 0)
+        return res
+
+
 if __name__ == "__main__":
     print(check_circle(3, [[0, 1], [0, 2], [1, 3]]))

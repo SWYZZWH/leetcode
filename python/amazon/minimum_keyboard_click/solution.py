@@ -1,0 +1,1 @@
+# 先用Map记录一下frequencies, 然后用lambda sort by values into another LinkedHashMap 接下来就算count就行

@@ -43,3 +43,19 @@ class Solution:
 #                     ret = max(ret, dp[j][k])
 #
 #         return ret
+
+class Solution:
+    def findMaxForm(self, strs: List[str], m: int, n: int) -> int:
+        ones = [s.count("1") for s in strs]
+        zeroes = [s.count("0") for s in strs]
+
+        dp = [[0 for j in range(n + 1)] for i in range(m + 1)]
+
+        for l in range(len(strs)):
+            for i in reversed(range(m + 1)):
+                for j in reversed(range(n + 1)):
+                    if i < zeroes[l] or j < ones[l]:
+                        continue
+                    dp[i][j] = max(dp[i - zeroes[l]][j - ones[l]] + 1, dp[i][j])
+
+        return dp[-1][-1]

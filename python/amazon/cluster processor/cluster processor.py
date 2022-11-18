@@ -1,0 +1,2 @@
+# 一排机器，input第一个是一个数组，代表每个机器的processing power，第二个数组代表boosting power, 第三个整数Max power。要求出满足条件最长的cluster（连续的sub array），在这个subarray里满足: max(boosting power) + sum(processing power) * k  <，k是这个subarray的长度。
+# max(boosting power) + sum(processing power) * k < maxPower

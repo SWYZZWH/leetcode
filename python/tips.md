@@ -4,6 +4,98 @@ https://www.zhihu.com/people/one-seventh/posts
 https://oi-wiki.org/
 https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/discuss/75924/Most-consistent-ways-of-dealing-with-the-series-of-stock-problems
 
+### wait list
+- kmp
+- multiple dp
+- scc
+- amazon
+    - https://www.1point3acres.com/bbs/thread-699232-1-1.html
+    - https://www.1point3acres.com/bbs/thread-923632-1-1.html
+
+### rolling hash
+
+```python
+from functools import reduce
+from typing import List
+
+MOD = 10 ** 9 + 7
+
+def str2list(s: str) -> List[int]:
+    return [ord(s[i]) - ord("a") for i in range(len(s))]
+
+def cal_hash(nums: List[int], base: int) -> int:
+    return reduce(lambda x, y: x * base + y, MOD)
+
+# whether s2 in s1
+def rabin_karp(s1: str, s2: str) -> bool:
+    nums, nums2 = str2list(s1), str2list(s2)
+    base = 26
+    h = cal_hash(nums, base)
+    h2 = cal_hash(nums2, base)
+    base_l = pow(base, len(s2), MOD)
+    for i in range(len(s2), len(nums)):
+        h = h * base - nums[i - len(s2)] * base_l + nums[i]
+        if h == h2:
+          return True
+    return False
+```
+
+### bit manipulation
+
+```python
+import numpy as np
+
+a = 2
+char_lst = list(np.binary_repr(a, a.bit_length()))
+```
+
+### sugar
+
+```python
+from string import ascii_lowercase
+
+for c in ascii_lowercase:
+    pass
+```
+
+```python
+import functools
+import itertools
+import operator
+
+for s in itertools.accumulate([1, 2, 3, 4, 5]):
+    print(s)
+
+a = functools.reduce(lambda x, y: x + y, [1, 2, 3, 4, 5])
+a = functools.reduce(operator.add, [1, 2, 3, 4, 5])
+```
+
+### array
+
+1. two - sum / three - sum (arr[i] + arr[j] == k) * (two pointers / hashmap)
+2. sorted array
+3. subarray sum == k (arr[i] + ... + arr[j] == k) ** (prefix_sum)
+4. subarray sum <= k (arr[i] + ... + arr[j] < k) *** (prefix_sum + binary search)
+5. sum of left and smaller elements *** (merge sort)
+6. sum of sub array with negative number * (one iteration, throw away left elements if cur_sum < 0)
+7. sum of sub 2d matrix ** (sum rows i ... j, get an array, do question 6)
+8. get any peak in array * (binary search)
+9. 
+
+### contiguous array sum
+
+if we want to find the k continuous positive / negative / positive == negative number, just turn positive to 1, negative to - 1 and try to calculate the contiguous sum
+
+### 字频压缩
+
+```python
+s = "abcdeabced"
+freq = [0 for i in range(26)]
+for c in s:
+    freq[ord(c) - ord("a")] += 1
+state = tuple(freq)  # now able to be hashed
+```
+
 ### dp problems
 
 tricks: append to the end of dp for border cases
@@ -22,7 +114,6 @@ def zero_one_knapsack():
     for i in range(0, len(present)):
         for j in reversed(range(present[i], budget + 1)):  # tips2: from back to front, and ignore 0 - present[i]          
             dp[j] = max(dp[j], dp[j - present[i]] + future[i] - present[i])
-
     return dp[-1]  # tips3: don't have to maintain a maximum
 ```
 
@@ -123,8 +214,8 @@ class TrieNode:
         pass
 ```
 
-
 #### Segement Tree
+
 ```python
 # basic template
 # https://leetcode.com/articles/a-recursive-approach-to-segment-trees-range-sum-queries-lazy-propagation/
@@ -136,13 +227,13 @@ class NumArray:
         self.nums = nums
         self.d = [0 for i in range(4 * self.n)]
         self.build_tree(1, 0, self.n - 1)
-        
+
     def build_tree(self, no: int, l: int, r: int):
         if l == r:
             self.d[no] = self.nums[l]
             return self.d[no]
-        
-        mid = (l + r) // 2 
+
+        mid = (l + r) // 2
         self.d[no] = self.build_tree(2 * no, l, mid) + self.build_tree(2 * no + 1, mid + 1, r)
         return self.d[no]
 
@@ -155,7 +246,7 @@ class NumArray:
         while l < r:
             mid = (l + r) // 2
             if mid < index:
-                cur_no = cur_no * 2 + 1     
+                cur_no = cur_no * 2 + 1
                 l = mid + 1
             else:
                 cur_no = cur_no * 2
@@ -165,11 +256,12 @@ class NumArray:
 
     def sumRange(self, left: int, right: int) -> int:
         cur_no = 1
-        l, r = 0, self.n - 1       
+        l, r = 0, self.n - 1
+
         def rec(no: int, l: int, r: int, left: int, right: int):
             if left <= l and r <= right:
                 return self.d[no]
-            
+
             ret = 0
             mid = (l + r) // 2
             if left <= mid:
@@ -177,11 +269,10 @@ class NumArray:
             if right > mid:
                 ret += rec(no * 2 + 1, mid + 1, r, left, right)
             return ret
-            
-        return rec(cur_no, l, r, left, right)            
+
+        return rec(cur_no, l, r, left, right)
 
 ```
-
 
 #### combination
 
@@ -461,6 +552,7 @@ startTime, endTime, profit = list(zip(*jobs))
 ### sugar
 
 ```python
+itertools.permutations([1,2,3]) # next_permutation in python 
 collections.Counter(time)  # iterable, return a freq dict
 collections.defaultdict(int)  # reference non-existed key return 0, not raise exception
 ```
@@ -723,6 +815,4 @@ map{key: Node}
 
 ### LFU
 
-maintain a global min_freq
-maintain a freq map:{freq: NodeList}
-maintain a key map:{key: Node}
+maintain a global min_freq maintain a freq map:{freq: NodeList} maintain a key map:{key: Node}

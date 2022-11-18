@@ -1,0 +1,3 @@
+# Given the stock [rices of n months, the net price change for the ith month is defined as the absolute difference between the average of stock prices for the first i months and for the remaining (n - i) months where 1 <= i /, n. Note that these averages are rounded down to an integer. Given an array of stock prices, find the month at which the net price change is minimum. If there are several such months, return the realiest month.
+# average problem can be solved basically by sum / cnt
+# for this problem, just maintain the prefix_sum & suffix_sum

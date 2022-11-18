@@ -12,3 +12,4 @@ class Solution:
             cur += data[i] == 1
             ret = max(ret, cur)
         return ones - ret
+

@@ -5,6 +5,8 @@ import sortedcontainers
 class TimeMap:
 
     def __init__(self):
+        self.c = sortedcontainers.SortedSet()
+        self.c.add()
         self.m = sortedcontainers.SortedDict()
 
     def set(self, key: str, value: str, timestamp: int) -> None:

@@ -32,10 +32,13 @@ func twoSum(nums []int, target int) []int {
 // one and only one pair
 func twoSum2(nums []int, target int) []int {
 	indexMap := make(map[int]int, len(nums))
+	var res []int
 	for i, num := range nums {
 		idx, ok := indexMap[target-num]
 		if ok {
-			return []int{idx, i}
+			res = append(res, idx)
+			res = append(res, i)
+			return res
 		}
 		indexMap[num] = i
 	}

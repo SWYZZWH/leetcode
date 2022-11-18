@@ -1,0 +1,2 @@
+# aggregate temperature change evaluated on the ith day is the maximum of the sum of the changes in temperatures until the ith day, and the sum of the change in temperatures on the next (n - i) days, with the ith day temperature change included in both. Given the temperature data of n days, find the maximum aggregate temperature change
+# maintain prefix_sum & suffix_sum
